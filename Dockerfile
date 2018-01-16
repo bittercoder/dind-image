@@ -15,7 +15,7 @@ ENV DOCKER_VERSION=1.13.1 \
 
 # Install Docker, Docker Compose, bash, jq, ca-certs
 RUN apk --update --no-cache \        
-        add zsh docker jq ca-certificates curl device-mapper mkinitfs e2fsprogs e2fsprogs-extra iptables && \
+        add bash docker jq ca-certificates curl device-mapper mkinitfs e2fsprogs e2fsprogs-extra iptables && \
         curl https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar zx && \
         mv /docker/* /bin/ && chmod +x /bin/docker* \
     && \
@@ -31,17 +31,17 @@ RUN chmod +x /bin/entrykit && entrykit --symlink
 
 WORKDIR /src
 
-RUN echo $'#!/bin/zsh \n\
+RUN echo $'#!/bin/bash \n\
 /bin/docker daemon' > /bin/docker-daemon && chmod +x /bin/docker-daemon
 
-RUN echo $'#!/bin/zsh \n\
+RUN echo $'#!/bin/bash \n\
 docker info && \n\
 /usr/bin/docker-compose pull && \n\
 echo Cloning /var/lib/docker to /cached-graph... && \n\
 ls -lah /var/lib/docker' > /bin/docker-compose-pull && chmod +x /bin/docker-compose-pull
 
 ENV SWITCH_PULL="codep docker-daemon docker-compose-pull"
-ENV SWITCH_SHELL=zsh
+ENV SWITCH_SHELL=bash
 ENV CODEP_DAEMON=/bin/docker\ daemon
 ENV CODEP_COMPOSE=/usr/bin/docker-compose\ up
 
