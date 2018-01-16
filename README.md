@@ -1,10 +1,13 @@
-# Docker-in-Docker Image [![Docker Repository on Quay](https://quay.io/repository/cosee-concourse/dind/status "Docker Repository on Quay")](https://quay.io/repository/cosee-concourse/dind)
+# Docker-in-Docker Image
 
 This image lets you run Docker within Docker.
 
 Additionally this image supports Docker Compose.
 
-This image is hosted at quay.io: [quay.io/cosee-concourse/dind](https://quay.io/cosee-concourse/dind)
+This is an updated version of https://quay.io/repository/cosee-concourse/dind/status which adds in support for the
+ECR credentials helper so you can docker pull from ECS to prime docker for docker-compose execution when using
+images from ECR.
+
 ## Example: Usage with ConcourseCI
 ### Docker Compose
 Pipeline definition:
