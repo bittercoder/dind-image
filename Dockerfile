@@ -23,7 +23,11 @@ RUN apk --update --no-cache \
         pip install docker-compose==${DOCKER_COMPOSE_VERSION}
 
 COPY --from=builder /assets /opt/resource
+
+#put docker-credentials-ecr-login in the right location and set it as the creds store
 RUN mv /opt/resource/ecr-login /usr/local/bin/docker-credential-ecr-login
+RUN mkdir -p ~/.docker
+RUN echo '{"credsStore":"ecr-login"}' >> ~/.docker/config.json
 
 RUN curl -L https://github.com/progrium/entrykit/releases/download/v${ENTRYKIT_VERSION}/entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz | tar zxv
 RUN mv ./entrykit /bin/entrykit
