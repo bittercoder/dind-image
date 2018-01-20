@@ -5,22 +5,15 @@ ENV CGO_ENABLED 0
 RUN mkdir /assets
 RUN go build -o /assets/ecr-login github.com/bittercoder/dind-image/vendor/github.com/awslabs/amazon-ecr-credential-helper/ecr-login/cmd
 
-FROM alpine:3.4 AS resource
-# https://github.com/mumoshu/dcind
-# MAINTAINER Yusuke KUOKA <kuoka@chatwork.com>
+FROM alpine:latest AS resource
 
-ENV DOCKER_VERSION=1.13.1 \
-    DOCKER_COMPOSE_VERSION=1.11.1 \
-    ENTRYKIT_VERSION=0.4.0
+ENV ENTRYKIT_VERSION=0.4.0
 
 # Install Docker, Docker Compose, bash, jq, ca-certs
 RUN apk --update --no-cache \        
-        add bash docker jq ca-certificates curl device-mapper mkinitfs e2fsprogs e2fsprogs-extra iptables && \
-        curl https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz | tar zx && \
-        mv /docker/* /bin/ && chmod +x /bin/docker* \
-    && \
+        add bash docker jq ca-certificates curl device-mapper mkinitfs e2fsprogs e2fsprogs-extra iptables docker && \        
         apk add py-pip && \
-        pip install docker-compose==${DOCKER_COMPOSE_VERSION}
+        pip install docker-compose
 
 COPY --from=builder /assets /opt/resource
 
