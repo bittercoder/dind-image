@@ -1,3 +1,5 @@
+# Ref: https://github.com/concourse/docker-image-resource/blob/master/assets/common.sh
+
 start_docker() {
   mkdir -p /var/log
   mkdir -p /var/run
@@ -6,7 +8,7 @@ start_docker() {
   if grep '/proc/sys\s\+\w\+\s\+ro,' /proc/mounts >/dev/null; then
     mount -o remount,rw /proc/sys
   fi
-  
+
   local mtu=$(cat /sys/class/net/$(ip route get 8.8.8.8|awk '{ print $5 }')/mtu)
   local server_args="--mtu ${mtu}"
   local registry=""
@@ -19,7 +21,7 @@ start_docker() {
     server_args="${server_args} --registry-mirror=$2"
   fi
 
-  dockerd ${server_args} --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 >/tmp/docker.log 2>&1 &
+  dind dockerd ${server_args} --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 >/tmp/docker.log 2>&1 &
   echo $! > /tmp/docker.pid
 
   trap stop_docker EXIT
