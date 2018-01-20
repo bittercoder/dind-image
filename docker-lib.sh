@@ -21,12 +21,11 @@ start_docker() {
     server_args="${server_args} --registry-mirror=$2"
   fi
 
-  dind dockerd ${server_args} --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 >/tmp/docker.log 2>&1 &
-
   #dind will conditionally mount a tmpfs at /tmp which seems like a good idea but hides the build artifacts from concourse, 
   #docker logs and docker pid we are trying to capture.  So we just umount it again (saves having to fork the DIND script to remove)
   #that behaviour in the first place.
-  umount /tmp
+
+  dind umount /tmp && dockerd ${server_args} --host=unix:///var/run/docker.sock --host=tcp://0.0.0.0:2375 >/tmp/docker.log 2>&1 &
 
   echo $! > /tmp/docker.pid
 
