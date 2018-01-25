@@ -9,7 +9,7 @@ FROM docker:stable-dind AS resource
 
 # Install Docker Compose, bash, jq, ca-certs etc.
 RUN apk --update --no-cache \        
-        add bash jq ca-certificates curl device-mapper mkinitfs e2fsprogs e2fsprogs-extra iptables py-pip 
+        add bash jq ca-certificates curl device-mapper mkinitfs e2fsprogs e2fsprogs-extra iptables git py-pip 
 
 RUN pip install docker-compose
 
